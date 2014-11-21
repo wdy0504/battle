@@ -1,0 +1,1 @@
+D:\development\mongodb\bin\mongod.exe -f D:\development\mongodb\bin\mongod.conf

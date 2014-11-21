@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>
+            chatofpomelo
+        </title>
+        <script src="js/lib/jquery-1.8.0.min.js">
+
+        </script>
+        <script src="js/lib/socket.io.js">
+
+        </script>
+        <script src="js/lib/pomeloclient.js">      </script>
+        <script type="text/javascript">
+            var host = "192.168.1.107";
+            var port = "3010";
+            show();
+            function show(){
+                pomelo.init({
+                    host: host,
+                    port: port,
+                    log: true
+                },function(){
+                    pomelo.request("connector.entryHandler.entry", "hello pomelo", function(data) {
+                        alert(data.msg);
+                    });
+                });
+            }
+        </script>
+    </head>
+    <body>
+    </body>
+</html>
