@@ -39,6 +39,8 @@ var Player = function (opts) {
 	this.skillPos = opts.skillPos || 0;
 	//宠物
 	this.pet = opts.pet || {};
+	//身上的buff
+	this.buffs = opts.buffs || [];
 };
 //角色属性
 var FightAttri = function (opts) {
@@ -281,10 +283,7 @@ function battle() {
 	pet1.pos = 2;
 	palyer2.pos = 11;
 	pet2.pos = 12;
-	fightRecord.attack.push(palyer1);
-	fightRecord.attack.push(pet1);
-	fightRecord.defend.push(palyer2);
-	fightRecord.defend.push(pet2);
+
 	var fightStructTmp1 = [];
 	var fightStructTmp2 = [];
 	var pet = new Player(pet1);
@@ -297,19 +296,10 @@ function battle() {
 	player.pet = pet;
 	fightStructTmp2.push(player);
 	fightStructTmp2.push(pet);
-	var around = 0;
-	//战斗队列
-	attackQueue1 = fightStructTmp1.slice();
-	//战斗队列
-	attackQueue2 = fightStructTmp2.slice();
-	//场上的人
-	defendQueue1 = fightStructTmp1.slice();
-	//场上的人
-	defendQueue2 = fightStructTmp2.slice();
-	//循环战斗
 
 
-	startBattle(attackQueue1, attackQueue2, defendQueue1, defendQueue2, fightRecord) 
+	//开始战斗
+	startBattle(fightStructTmp1, fightStructTmp2) 
 	
-	return fightRecord;
+	return ;
 };
