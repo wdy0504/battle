@@ -7,6 +7,7 @@ function skillAttack(attacker, playerQueue, defendQueue, buffOper, defenderRecor
 		damagePer : 0,
 		avoidRate : 0,
 		critRate : 0,
+		critHurt : 0,
 		vampirePer : 0,
 		damage : 0,
 		hitRate : 0,
@@ -15,7 +16,12 @@ function skillAttack(attacker, playerQueue, defendQueue, buffOper, defenderRecor
 		reduceDamagePer : 0
 	}
 	var skillId = attacker.skills[attacker.skillPos];
+	console.log(attacker.name + '使用了技能' + skillId );
 	switch (skillId) {
+	case 0:
+		//普通攻击：
+		battle1(attacker, defendQueue, defenderRecords, PHYSICALATTACK, opt);
+		break;
 	case 101000:
 		//血性狂击。攻击敌人，并恢复伤害的20%的血量
 		opt.vampirePer = 20;
@@ -30,15 +36,13 @@ function skillAttack(attacker, playerQueue, defendQueue, buffOper, defenderRecor
 			id : 102000,
 			tick : 3,
 			value : [10, 10, 10],
-			player : player.pet
+			player : attacker.pet
 		};
 		buffOper.push(buff);
-		buff
-		
 		break;
 	case 103000:
 		//兽王击。附加宠物的50%的攻击力，并给予敌人一击
-		opt.attack = Math.floor(player.pet.fightAttri.attack * 0.5);
+		opt.attack = Math.floor(attacker.pet.fightAttri.attack * 0.5);
 		battle1(attacker, defendQueue, defenderRecords, PHYSICALATTACK, opt);
 	case 104000:
 		//狼嚎。增加宠物攻击力，暴击率，暴击伤害
@@ -73,37 +77,32 @@ function skillAttack(attacker, playerQueue, defendQueue, buffOper, defenderRecor
 		break;
 	case 108000:
 		//招魂术,复活自己的宠物
-		if (player.pet.hp > 0) {
-			battle1(player, defendQueue, defenderRecords, NORMALATTACK, opt);
+		if (attacker.pet.hp > 0) {
+			battle1(attacker, defendQueue, defenderRecords, NORMALATTACK, opt);
 		} else {
-			player.pet.hp = player.pet.maxHp * 0.1;
-			playerQueue.push(player.pet);
+			attacker.pet.hp = attacker.pet.maxHp * 0.1;
+			playerQueue.push(attacker.pet);
 		}
 		break;
 	}
-	
-	attacker.skillPos = attacker.skillPos === 4 ? 1 :  attacker.skillPos + 1; 
-	return;
+
+	attacker.skillPos = attacker.skillPos === 3 ? 1 : attacker.skillPos + 1;
+	return skillId;
 }
 
-function buffOper(id, player, buff) {
+function buffOper(id, player, value) {
 	switch (id) {
 	case 102000:
 		//增加宠物的防御力，闪避率，回血速度buff
-		player.fightAttri.defend -= buff.value[0];
-		player.fightAttri.recoverHp -= buff.value[1];
-		player.fightAttri.avoidRate -= buff.value[2];
+		player.fightAttri.defend -= value[0];
+		player.fightAttri.recoverHp -= value[1];
+		player.fightAttri.avoidRate -= value[2];
 		break;
 	case 104000:
 		//狼嚎。增加宠物攻击力，暴击率，暴击伤害
-		player.fightAttri.attack -= buff.value[0];
-		player.fightAttri.critRate -= buff.value[1];
-		player.fightAttri.critHurt -= buff.value[2];
-		break;
-	case 2003:
-		//嗜血术。为自己的宠物附加吸血的buff,挺升宠物10攻击力
-		player.fightAttri.vampire -= buff.value[0];
-		player.fightAttri.attack -= buff.value[1];
+		player.fightAttri.attack -= value[0];
+		player.fightAttri.critRate -= value[1];
+		player.fightAttri.critHurt -= value[2];
 		break;
 	}
 }
@@ -113,13 +112,13 @@ function calcSkilldamage(attacker, defender, attackType, oper, opt) {
 	var damage = 0;
 	var damagePer = 100;
 	var content = '';
-	if (attackType === 1) {
+	if (attackType !== 3) {
 		//是否闪避
 		var rate = defender.attriRate.avoidRate - opt.hitRate - attacker.attriRate.hitRate;
 		rate = rate < 0 ? 10 : (rate > 80 ? 80 : rate);
 		if (Math.floor(Math.random() * 100) <= rate) {
 			oper.reacOper = 2;
-			//console.log(player2.name + '闪避了' + player2.name + '的攻击——————(' + player1.name + '的hp:' + player1.hp +';' + player2.name + '的hp:' + player2.hp')');
+			console.log(defender.name + '闪避了' + attacker.name + '的攻击——————(' + attacker.name + '的hp:' + attacker.hp +';' + defender.name + '的hp:' + defender.hp + ')');
 			return;
 		}
 	}
@@ -131,14 +130,15 @@ function calcSkilldamage(attacker, defender, attackType, oper, opt) {
 	}
 	//计算伤害
 	damage = attacker.fightAttri.attack + opt.attack - defender.fightAttri.defend + defender.fightAttri.defend * opt.reduceDefendPer / 100;
+	console.log(damagePer + '&' + opt.damagePer+ '&' +defender.fightAttri.reduceDamagePer+ '&' +opt.reduceDamagePer);
 	oper.damage = Math.floor(damage * (damagePer + opt.damagePer - defender.fightAttri.reduceDamagePer - opt.reduceDamagePer) / 100);
-	defender.hp = defender.hp - damage;
+	defender.hp = damage = defender.hp - damage;
 	if (attacker.vampirePer > 0 && attackType !== 3) {
 		hp = attacker.hp + damage * attacker.vampirePer / 100;
 		oper.vampireHurt = hp < attacker.maxHp ? hp : attacker.maxHp;
 		attacker.hp = attacker.hp + oper.vampireHurt;
 	}
-	//console.log(player2.name + '受到' + player2.name + '的' + damage + '伤害——————(' + player1.name + '的hp:' + player1.hp +';' + player2.name + '的hp:' + player2.hp')');
+	console.log(defender.name + '受到' + attacker.name + '的' + damage + '伤害——————(' + attacker.name + '的hp:' + attacker.hp +';' + defender.name + '的hp:' + defender.hp + ')');
 	return;
 };
 
@@ -155,14 +155,15 @@ function battle1(attacker, defendQueue, defenderRecords, attackType, opt, func) 
 	}
 	calcSkilldamage(attacker, p, attackType, oper, opt);
 	defender = {
-		blood : p.hp,
+		hp : p.hp,
 		oper : oper,
-		pos : p.pos
+		pos : p.pos,
+		name : p.name
 		//player : new Player(p),
 	};
 	defenderRecords.push(defender);
 	if (p.hp < 0) {
-		defendQueue.splice(index2, 1);
+		defendQueue.splice(index, 1);
 	}
 }
 
@@ -173,16 +174,19 @@ function battle2(attacker, defendQueue, defenderRecords, attackType, opt, func, 
 		vampireHurt : 0,
 		damage : 0
 	};
-	for (var i = 0; i < num; i++) {
+	var l = k.length;
+	for (var i = 0; i < l; i++) {
 		var p = defendQueue[k[i]];
 		if (func) {
 			func(p, opt);
 		}
+		
 		calcSkilldamage(attacker, p, attackType, oper, opt);
 		defender = {
-			blood : p.hp,
+			hp : p.hp,
 			pos : p.pos,
-			oper : oper
+			oper : oper,
+			name : p.name
 			//player : new Player(p),
 		};
 		defenderRecords.push(defender);
@@ -206,9 +210,10 @@ function battle3(attacker, defendQueue, defenderRecords, attackType, opt, func, 
 		}
 		calcSkilldamage(attacker, p, attackType, oper, opt);
 		defender = {
-			blood : p.hp,
-			oper ： oper,
-			pos : p.pos
+			hp : p.hp,
+			oper : oper,
+			pos : p.pos,
+			name : p.name
 			//player : new Player(p),
 		};
 		defenderRecords.push(defender);
@@ -221,17 +226,20 @@ function battle3(attacker, defendQueue, defenderRecords, attackType, opt, func, 
 
 function battling(attackQueue, playerQueue, defendQueue, round, buffOper, fightRecord) {
 	var defenderRecords = [];
-	while (true) {
+	var skillId;
+	while (attackQueue.length > 0) {
 		var index = Math.floor(Math.random() * attackQueue.length);
-		var attacker = attackQueue.splice(index1, 1)[0];
-		if (attackQueue[index].hp > 0) {
-			skillAttack(attacker, playerQueue, defendQueue, buffOper, defenderRecords);
+		var attacker = attackQueue.splice(index, 1)[0];
+		if (attacker.hp > 0) {
+			skillId = skillAttack(attacker, playerQueue, defendQueue, buffOper, defenderRecords);
 		} else {
 			continue;
 		}
-		var attackRecord = {
-			blood : attacker.hp,
+		var attackerRecord = {
+			hp : attacker.hp,
 			pos : attacker.pos,
+			skillId : skillId,
+			name : attacker.name
 			//player : new Player(p)
 		};
 
@@ -245,32 +253,32 @@ function battling(attackQueue, playerQueue, defendQueue, round, buffOper, fightR
 	}
 };
 
-exports.startBattle(fightStructTmp1, fightStructTmp2) {
-	var FightAction = function (opts) {
-	//所属回合
-	this.around = opts.around || 0;
-	this.attacker = opts.attacker || [];
-	this.defenders = opts.defenders || [];
-};
-var FightRecord = function (opts) {
-	//回合总数
-	this.roundCount = opts.roundCount || 0;
-	//攻击方
-	this.attack = opts.attack || 0;
-	//防守方
-	this.defend = opts.defend || 0;
-	//行动细节
-	this.fightActions = [];
-};
+exports.startBattle = function(fightStructTmp1, fightStructTmp2){
+	gBuffOper = [];
 	fightRecord = {
-		roundCount:0,
-		attack:0,
-		fightActions:[]
+		roundCount : 0,
+		queue1 : [],
+		queue2 : [],
+		fightActions : [],
+		buffs: []
+	}
+	for (var i in fightStructTmp1) {
+		var j = {
+			name : fightStructTmp1[i].name,
+			maxHp : fightStructTmp1[i].maxHp,
+			hp : fightStructTmp1[i].hp
 		}
-	fightRecord.attack.push(palyer1);
-	fightRecord.attack.push(pet1);
-	fightRecord.defend.push(palyer2);
-	fightRecord.defend.push(pet2);
+		fightRecord.queue1.push(j);
+	}
+
+	for (var i in fightStructTmp2) {
+		var j = {
+			name : fightStructTmp1[i].name,
+			maxHp : fightStructTmp2[i].maxHp,
+			hp : fightStructTmp2[i].hp
+		}
+		fightRecord.queue2.push(j);
+	}
 
 	//战斗队列
 	attackQueue1 = fightStructTmp1.slice();
@@ -280,9 +288,8 @@ var FightRecord = function (opts) {
 	defendQueue1 = fightStructTmp1.slice();
 	//场上的人
 	defendQueue2 = fightStructTmp2.slice();
-	
+
 	var round = 0;
-	var fightRecord = {};
 	while (defendQueue1.length > 0 && defendQueue2.length > 0) {
 		while ((attackQueue1.length > 0 && defendQueue2.length > 0) || (attackQueue2.length > 0 && defendQueue1.length > 0)) {
 			if (attackQueue1.length > 0 && defendQueue2.length > 0) {
@@ -300,8 +307,8 @@ var FightRecord = function (opts) {
 		for (var i = 0; i < length; i++) {
 			gBuffOper[i].tick--;
 			if (gBuffOper[i].tick == 0) {
-				buffOper(gBuffOper[i].id, gBuffOper[i].player);
-			}else{
+				buffOper(gBuffOper[i].id, gBuffOper[i].player, gBuffOper[i].value);
+			} else {
 				var buff = {
 					id : gBuffOper[i].id,
 					pos : gBuffOper[i].player.pos,
@@ -313,12 +320,14 @@ var FightRecord = function (opts) {
 		fightRecord.buffs.push(buffs);
 		round++;
 	}
+	fightRecord.roundCount = round;
+	return fightRecord;
 }
 
 function getRandom(length, num) {
 	var a = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 	if (length <= num) {
-		return a.slice(1, length).reverse();
+		return a.slice(0, length).reverse();
 	}
 	var k = [];
 	for (var i = 0; i < num; i++) {

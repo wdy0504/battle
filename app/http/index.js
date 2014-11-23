@@ -68,7 +68,7 @@ var Server = function(app, opts) {
   
   fs.readdirSync(routesPath).forEach(function(file) {
     //然后加载所有js文件，除了先前加载的index.js
-    if (/.js$/.test(file) && file !== 'index.js' ) {
+    if (/Route.js$/.test(file) && file !== 'index.js' ) {
       var routePath = path.join(routesPath, file);
       require(routePath)(self.server);
     }

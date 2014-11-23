@@ -1,16 +1,14 @@
 //var redisClient = require('../../../models/redisClient');
 var underscore = require('underscore');
 var sprintf = require("sprintf-js").sprintf;
+var skillAttack = require("./skillAttack");
 var time1;
 module.exports = function (app) {
 	app.post('/battle/battle', function (req, res) {
-		fightRecord = new FightRecord({});
-		time1 = new Date().getTime();
 		var b = battle();
 		res.send(b);
 	});
 }
-var gBuffOper = [];
 //buff列表
 var FightStruct = function (opts) {
 	this.one = opts.one || {};
@@ -195,16 +193,19 @@ function battle() {
 			block : 150,
 			wreck : 50,
 			avoid : 150,
-			reduceArmor : 0;
+			reduceArmor : 0
 		});
 	var pet1 = new Player({
 			name : '狗',
 			type : 2,
 			fightAttri : fightAttri,
+			attriRate : {},
 			hp : 200,
-			maxHp : 200;
+			maxHp : 200,
+			skills : [101000,0,106000,107000]
 		});
 	calcAllRate(pet1);
+	
 	var fightAttri = new FightAttri({
 			attack : 100,
 			armor : 50,
@@ -217,12 +218,13 @@ function battle() {
 			wreck : 50,
 			avoid : 150,
 			reduceArmor : 0,
-			angry : 0;
+			angry : 0
 		});
 	var player1 = new Player({
 			name : '韩立',
 			type : 1,
 			fightAttri : fightAttri,
+			attriRate : {},
 			hp : 200,
 			maxHp : 200,
 			pet : pet1,
@@ -242,14 +244,16 @@ function battle() {
 			wreck : 50,
 			avoid : 150,
 			reduceArmor : 0,
-			angry : 0;
+			angry : 0
 		});
 	var pet2 = new Player({
 			name : '猫',
 			type : 2,
 			fightAttri : fightAttri,
+			attriRate : {},
 			hp : 200,
-			maxHp : 200;
+			maxHp : 200,
+			skills : [101000,0,106000,107000]
 		});
 	calcAllRate(pet2);
 	
@@ -264,42 +268,39 @@ function battle() {
 			block : 150,
 			wreck : 50,
 			avoid : 150,
-			reduceArmor : 0;
+			reduceArmor : 0
 		});
 	var player2 = new Player({
 			name : '王林',
 			type : 1,
 			fightAttri : fightAttri,
+			attriRate : {},
 			hp : 200,
 			maxHp : 200,
 			pet : pet2,
 			skills : [101000,102000,103000,104000]
 		});
 	calcAllRate(pet2);
-	var tmp = {};
-	var tmp1 = {};
-	var tmp2 = {};
-	palyer1.pos = 1;
+
+	player1.pos = 1;
 	pet1.pos = 2;
-	palyer2.pos = 11;
+	player2.pos = 11;
 	pet2.pos = 12;
 
 	var fightStructTmp1 = [];
-	var fightStructTmp2 = [];
 	var pet = new Player(pet1);
-	var player = new Player(palyer1);
+	var player = new Player(player1);
 	player.pet = pet;
 	fightStructTmp1.push(player);
 	fightStructTmp1.push(pet);
+	
+	var fightStructTmp2 = [];
 	var pet = new Player(pet2);
-	var player = new Player(palyer2);
+	var player = new Player(player2);
 	player.pet = pet;
 	fightStructTmp2.push(player);
 	fightStructTmp2.push(pet);
 
-
 	//开始战斗
-	startBattle(fightStructTmp1, fightStructTmp2) 
-	
-	return ;
+	return skillAttack.startBattle(fightStructTmp1, fightStructTmp2);
 };
