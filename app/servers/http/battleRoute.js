@@ -25,6 +25,8 @@ var Player = function (opts) {
 	this.hp = opts.hp || 0;
 	//战斗状态
 	this.battleStatus = opts.battleStatus || 0;
+	//状态
+	this.status = opts.status || 0; //1:无法回血
 	//最大血量
 	this.maxHp = opts.hp || 0;
 	//战斗属性
