@@ -43,6 +43,7 @@ function skillAttack(attacker, playerQueue, defendQueue, buffOper, defenderRecor
 	case 103000:
 		//兽王击。附加宠物的50%的攻击力，并给予敌人一击(物理)
 		opt.attack = Math.floor(attacker.pet.fightAttri.attack * 0.5);
+		
 		battle1(attacker, defendQueue, defenderRecords, PHYSICALATTACK, opt);
 	case 104000:
 		//狼嚎。增加宠物攻击力，暴击率，暴击伤害

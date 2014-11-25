@@ -58,29 +58,25 @@ var FightAttri = function (opts) {
 	this.toughness = opts.toughness || 0;
 	//命中
 	this.hit = opts.hit || 0;
-	//格挡
-	this.block = opts.block || 0;
-	//破击
-	this.wreck = opts.wreck || 0;
 	//闪避
 	this.avoid = opts.avoid || 0;
 	//无视防御
 	this.reduceDefend = opts.reduceDefend || 0;
 	//无视防御百分比
 	this.reduceDefendPer = opts.reduceDefendPer || 0;
-	//无视护甲
-	this.reduceArmor = opts.reduceArmor || 0;
 	//吸血百分比
 	this.vampirePer = opts.vampirePer || 0;
 	//每回合回血
 	this.recoverHp = opts.recoverHp || 0;
 	//伤害减免
 	this.reduceDamagePer = opts.reduceDamagePer || 0;
+	//物理伤害减免
+	this.reducePhysicalDamagePer = opts.reduceDamagePer || 0;
+	//技能伤害减免
+	this.reduceSkillDamagePer = opts.reduceDamagePer || 0;
 };
 //角色属性概率
 var AttriRate = function (opts) {
-	//护甲减伤率
-	this.armorRate = opts.armorRate || 0;
 	//削弱减伤率
 	this.reduceArmorRate = opts.reduceArmorRate || 0;
 	//暴击率
@@ -89,10 +85,6 @@ var AttriRate = function (opts) {
 	this.toughnessRate = opts.toughnessRate || 0;
 	//命中率
 	this.hitRate = opts.hitRate || 0;
-	//格挡率
-	this.blockRate = opts.blockRate || 0;
-	//破击率
-	this.wreckRate = opts.wreckRate || 0;
 	//闪避率
 	this.avoidRate = opts.avoidRate || 0;
 };
@@ -176,24 +168,17 @@ function calcAllRate(player) {
 	player.attriRate.critRate = calcRate(player.fightAttri.crit);
 	player.attriRate.toughnessRate = calcRate(player.fightAttri.toughness);
 	player.attriRate.hitRate = calcRate(player.fightAttri.hit);
-	player.attriRate.blockRate = calcRate(player.fightAttri.block);
-	player.attriRate.wreckRate = calcRate(player.fightAttri.wreck);
 	player.attriRate.avoidRate = calcRate(player.fightAttri.avoid);
-	player.attriRate.armorRate = calcRate(player.fightAttri.armor);
-	player.attriRate.reduceArmorRate = calcRate(player.fightAttri.reduceArmor);
 };
 
 function battle() {
 	var fightAttri = new FightAttri({
 			attack : 100,
-			armor : 50,
 			defend : 50,
 			critHurt : 50,
 			crit : 150,
 			toughness : 50,
 			hit : 50,
-			block : 150,
-			wreck : 50,
 			avoid : 150,
 			reduceArmor : 0
 		});
@@ -210,17 +195,12 @@ function battle() {
 	
 	var fightAttri = new FightAttri({
 			attack : 100,
-			armor : 50,
 			defend : 50,
 			critHurt : 50,
 			crit : 150,
 			toughness : 50,
 			hit : 50,
-			block : 150,
-			wreck : 50,
 			avoid : 150,
-			reduceArmor : 0,
-			angry : 0
 		});
 	var player1 = new Player({
 			name : '韩立',
@@ -236,17 +216,12 @@ function battle() {
 	
 	var fightAttri = new FightAttri({
 			attack : 100,
-			armor : 50,
 			defend : 50,
 			critHurt : 50,
 			crit : 150,
 			toughness : 50,
 			hit : 50,
-			block : 150,
-			wreck : 50,
-			avoid : 150,
-			reduceArmor : 0,
-			angry : 0
+			avoid : 150
 		});
 	var pet2 = new Player({
 			name : '猫',
@@ -261,16 +236,12 @@ function battle() {
 	
 	var fightAttri = new FightAttri({
 			attack : 100,
-			armor : 50,
 			defend : 50,
 			critHurt : 50,
 			crit : 150,
 			toughness : 50,
 			hit : 50,
-			block : 150,
-			wreck : 50,
-			avoid : 150,
-			reduceArmor : 0
+			avoid : 150
 		});
 	var player2 = new Player({
 			name : '王林',
