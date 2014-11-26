@@ -46,8 +46,6 @@ var Player = function (opts) {
 var FightAttri = function (opts) {
 	//攻击力
 	this.attack = opts.attack || 0;
-	//护甲
-	this.armor = opts.armor || 0;
 	//防御
 	this.defend = opts.defend || 0;
 	//暴击伤害
@@ -60,6 +58,10 @@ var FightAttri = function (opts) {
 	this.hit = opts.hit || 0;
 	//闪避
 	this.avoid = opts.avoid || 0;
+	//控制
+	this.control =  opts.control || 0;
+	//抗性
+	this.resistance =  opts.resistance || 0;
 	//无视防御
 	this.reduceDefend = opts.reduceDefend || 0;
 	//无视防御百分比
@@ -101,30 +103,7 @@ var BuffOper = function (opts) {
 	//buff影响的角色
 	this.player = opts.player;
 };
-var Attacker = function (opts) {
-	//位置
-	this.pos = opts.pos || 0;
-	//释放技能id
-	this.skillId = opts.skillId || 0;
-	//攻击血量
-	this.blood = opts.blood || 0;
-	//角色
-	this.player = opts.player || {};
-};
-var Defender = function (opts) {
-	//位置
-	this.pos = opts.pos || 0;
-	//防守方血量
-	this.blood = opts.blood || 0;
-	//1:格挡;2:闪避;3:反击;4:击飞;5:正常;6:复活;7:double_hit
-	this.reacOper1 = opts.reacOper1 || 0;
-	//0:暴击;
-	this.reacOper2 = opts.reacOper2 || 0;
-	//角色
-	this.player = opts.player || {};
-	//受到的伤害
-	this.damage = opts.damage || 0;
-};
+
 var FightAction = function (opts) {
 	//所属回合
 	this.around = opts.around || 0;
