@@ -1,131 +1,226 @@
-var Player = function (opts) {
+var underscore = require('underscore');
+
+
+exports.Player = function (opts) {
 	this.name = opts.name;
-	//ÀàĞÍ 1:ÈËÎï;2:³èÎï
+	//ç±»å‹ 1:äººç‰©;2:å® ç‰©
 	this.type = opts.type || 1;
-	//Õ½¶·Î»ÖÃ
+	//æˆ˜æ–—ä½ç½®
 	this.pos = opts.pos || 0;
-	//Õ½¶·ÑªÁ¿
+	//æˆ˜æ–—è¡€é‡
 	this.hp = opts.hp || 0;
-	//Õ½¶·×´Ì¬
+	//æˆ˜æ–—çŠ¶æ€
 	this.battleStatus = opts.battleStatus || 0;
-	//×´Ì¬
-	this.status = opts.status || 0; //1:ÎŞ·¨»ØÑª
-	//×î´óÑªÁ¿
+	//çŠ¶æ€
+	this.status = opts.status || 0; //1:æ— æ³•å›è¡€
+	//æœ€å¤§è¡€é‡
 	this.maxHp = opts.hp || 0;
-	//Õ½¶·ÊôĞÔ
+	//æˆ˜æ–—å±æ€§
 	this.fightAttri = new FightAttri(opts.fightAttri) || {};
-	//ÊôĞÔ¸ÅÂÊ
+	//å±æ€§æ¦‚ç‡
 	this.attriRate = new AttriRate(opts.attriRate) || {};
-	//¼¼ÄÜ×é
+	//åŸºç¡€å±æ€§
+	this.basicAttri = new BasicAttri(opts.basicAttri) || {};
+	//æŠ€èƒ½ç»„
 	this.skills = opts.skills || [];
-	//¼¼ÄÜĞòºÅ
+	//æŠ€èƒ½åºå·
 	this.skillPos = opts.skillPos || 0;
-	//³èÎï
+	//å® ç‰©
 	this.pet = opts.pet || {};
-	//ÉíÉÏµÄbuff
+	//èº«ä¸Šçš„buff
 	this.buffs = opts.buffs || [];
-	//ÊôĞÔµã
-	this.attriPoint = opts.buffs || 0;
-	//µ±Ç°¾­Ñé
+	//å½“å‰ç»éªŒ
 	this.exp = opts.exp || 0;
-	//Á¦Á¿
-	this.str = opts.str || 0;
-	//ÌåÖÊ
-	this.con = opts.con || 0;
-	//Ãô½İ
-	this.dex = opts.dex || 0;
-	//ÒâÖ¾
-	this.wil = opts.wil || 0;
-	//¾«Éñ
-	this.spi = opts.spi || 0;
 };
-//½ÇÉ«ÊôĞÔ
-var FightAttri = function (opts) {
-	//¹¥»÷Á¦
+//åŸºç¡€å±æ€§
+var BasicAttri = function (opts) {
+	//å±æ€§ç‚¹
+	this.attriPoint = opts.buffs || 0;
+	//åŠ›é‡
+	this.str = opts.str || 0;
+	//ä½“è´¨
+	this.con = opts.con || 0;
+	//æ•æ·
+	this.dex = opts.dex || 0;
+	//æ„å¿—
+	this.wil = opts.wil || 0;
+	//ç²¾ç¥
+	this.spi = opts.spi || 0;
+	//è¡€é‡
+	this.maxHp = opts.maxHp || 0;
+	//æ”»å‡»åŠ›
 	this.attack = opts.attack || 0;
-	//·ÀÓù
+	//é˜²å¾¡
 	this.defend = opts.defend || 0;
-	//±©»÷ÉËº¦
+	//æš´å‡»ä¼¤å®³
 	this.critHurt = opts.critHurt || 0;
-	//±©»÷
+	//æš´å‡»
 	this.crit = opts.crit || 0;
-	//ÈÍĞÔ
+	//éŸ§æ€§
 	this.toughness = opts.toughness || 0;
-	//ÃüÖĞ
+	//å‘½ä¸­
 	this.hit = opts.hit || 0;
-	//ÉÁ±Ü
+	//é—ªé¿
 	this.avoid = opts.avoid || 0;
-	//¿ØÖÆ
-	this.control =  opts.control || 0;
-	//¿¹ĞÔ
-	this.resistance =  opts.resistance || 0;
-	//ÎŞÊÓ·ÀÓù
+	//æ§åˆ¶
+	this.control = opts.control || 0;
+	//æŠ—æ€§
+	this.resistance = opts.resistance || 0;
+	//æ— è§†é˜²å¾¡
 	this.reduceDefend = opts.reduceDefend || 0;
-	//ÎŞÊÓ·ÀÓù°Ù·Ö±È
+	//æ— è§†é˜²å¾¡ç™¾åˆ†æ¯”
 	this.reduceDefendPer = opts.reduceDefendPer || 0;
-	//ÎüÑª°Ù·Ö±È
+	//å¸è¡€ç™¾åˆ†æ¯”
 	this.vampirePer = opts.vampirePer || 0;
-	//Ã¿»ØºÏ»ØÑª
+	//æ¯å›åˆå›è¡€
 	this.recoverHp = opts.recoverHp || 0;
-	//ÉËº¦¼õÃâ
+	//ä¼¤å®³å‡å…
 	this.reduceDamagePer = opts.reduceDamagePer || 0;
-	//ÎïÀíÉËº¦¼õÃâ
+	//ç‰©ç†ä¼¤å®³å‡å…
 	this.reducePhysicalDamagePer = opts.reduceDamagePer || 0;
-	//¼¼ÄÜÉËº¦¼õÃâ
+	//æŠ€èƒ½ä¼¤å®³å‡å…
+	this.reduceSkillDamagePer = opts.reduceDamagePer || 0;
+}
+//è§’è‰²å±æ€§
+var FightAttri = function (opts) {
+	//æ”»å‡»åŠ›
+	this.attack = opts.attack || 0;
+	//é˜²å¾¡
+	this.defend = opts.defend || 0;
+	//æš´å‡»ä¼¤å®³
+	this.critHurt = opts.critHurt || 0;
+	//æš´å‡»
+	this.crit = opts.crit || 0;
+	//éŸ§æ€§
+	this.toughness = opts.toughness || 0;
+	//å‘½ä¸­
+	this.hit = opts.hit || 0;
+	//é—ªé¿
+	this.avoid = opts.avoid || 0;
+	//æ§åˆ¶
+	this.control = opts.control || 0;
+	//æŠ—æ€§
+	this.resistance = opts.resistance || 0;
+	//æ— è§†é˜²å¾¡
+	this.reduceDefend = opts.reduceDefend || 0;
+	//æ— è§†é˜²å¾¡ç™¾åˆ†æ¯”
+	this.reduceDefendPer = opts.reduceDefendPer || 0;
+	//å¸è¡€ç™¾åˆ†æ¯”
+	this.vampirePer = opts.vampirePer || 0;
+	//æ¯å›åˆå›è¡€
+	this.recoverHp = opts.recoverHp || 0;
+	//ä¼¤å®³å‡å…
+	this.reduceDamagePer = opts.reduceDamagePer || 0;
+	//ç‰©ç†ä¼¤å®³å‡å…
+	this.reducePhysicalDamagePer = opts.reduceDamagePer || 0;
+	//æŠ€èƒ½ä¼¤å®³å‡å…
 	this.reduceSkillDamagePer = opts.reduceDamagePer || 0;
 };
-//½ÇÉ«ÊôĞÔ¸ÅÂÊ
+//è§’è‰²å±æ€§æ¦‚ç‡
 var AttriRate = function (opts) {
-	//Ï÷Èõ¼õÉËÂÊ
+	//å‰Šå¼±å‡ä¼¤ç‡
 	this.reduceArmorRate = opts.reduceArmorRate || 0;
-	//±©»÷ÂÊ
+	//æš´å‡»ç‡
 	this.critRate = opts.critRate || 0;
-	//ÈÍĞÔÂÊ
+	//éŸ§æ€§ç‡
 	this.toughnessRate = opts.toughnessRate || 0;
-	//ÃüÖĞÂÊ
+	//å‘½ä¸­ç‡
 	this.hitRate = opts.hitRate || 0;
-	//ÉÁ±ÜÂÊ
+	//é—ªé¿ç‡
 	this.avoidRate = opts.avoidRate || 0;
 };
-function lvlup(p){
-	p.maxHp +=3	
-	p.fightAttri.attack += 2;
-	p.fightAttri.hit += 1;
-	p.fightAttri.avoid += 1;
-	p.fightAttri.defend += 1;
-	p.fightAttri.critHurt += 1;
-	p.fightAttri.crit += 1;
-	p.fightAttri.toughness += 1;
-	p.fightAttri.control += 1;
-	p.fightAttri.resistance += 1;
-	p.attriPoint += 5;
+//è®¡ç®—æ¦‚ç‡
+function calcRate(x) {
+	var array1 = [[0, 1, 0], [20, 2, 20], [60, 3, 40], [120, 4, 60], [200, 5, 80], [300, 6, 100], [420, 7, 120], [560, 8, 140], [720, 9, 160], [900, 10, 180], [1100, 11, 200], [1320, 12, 220], [1560, 13, 240]];
+	var array2 = [20, 60, 120, 200, 300, 420, 560, 720, 900, 1100, 1320, 1560];
+	var index = underscore.sortedIndex(array2, x);
+	rate = Math.floor((x - array1[index][0]) / array1[index][1]) + array1[index][2];
+	return rate;
+};
+//å‡çº§
+function lvlup(player) {
+	player.basicAttri.maxHp += 3;
+	player.basicAttri.attack += 2;
+	player.basicAttri.hit += 1;
+	player.basicAttri.avoid += 1;
+	player.basicAttri.defend += 1;
+	player.basicAttri.critHurt += 1;
+	player.basicAttri.crit += 1;
+	player.basicAttri.toughness += 1;
+	player.basicAttri.control += 1;
+	player.basicAttri.resistance += 1;
+	player.basicAttri.attriPoint += 5;
 }
-
-function str(p, num){
-	p.fightAttri.attack += num * 2;
-	p.maxHp += num * 1;
+//è®¡ç®—åŠ›é‡å±æ€§
+function str(player, num) {
+	player.fightAttri.attack += num * 2;
+	player.maxHp += num * 1;
 }
-
-function con(p, num){
-	p.fightAttri.defend += num * 2;
-	p.maxHp += num * 2;
+//è®¡ç®—ä½“è´¨å±æ€§
+function con(player, num) {
+	player.fightAttri.defend += num * 2;
+	player.maxHp += num * 2;
 }
-
-function wil(p, num){
-	p.fightAttri.critHurt += num * 1;
-	p.fightAttri.crit += num * 3;
-	p.fightAttri.resistance += 2;
+//è®¡ç®—æ„å¿—å±æ€§
+function wil(player, num) {
+	player.fightAttri.critHurt += num * 1;
+	player.fightAttri.crit += num * 3;
+	player.fightAttri.resistance += 2;
 }
-
-function dex(p, num){
-	p.fightAttri.avoid += num * 1;
-	p.fightAttri.crit += num * 1;
+//è®¡ç®—æ•æ·å±æ€§
+function dex(player, num) {
+	player.fightAttri.avoid += num * 1;
+	player.fightAttri.crit += num * 1;
 }
-
-function spi(p, num){
-	p.fightAttri.attack += num * 1;
-	p.fightAttri.cure += num * 1;
-	p.fightAttri.resistance += num * 1;
-	p.fightAttri.control += num * 2;
-	p.maxHp += num * 1;
+//è®¡ç®—ç²¾ç¥å±æ€§
+function spi(player, num) {
+	player.fightAttri.attack += num * 1;
+	player.fightAttri.cure += num * 1;
+	player.fightAttri.resistance += num * 1;
+	player.fightAttri.control += num * 2;
+	player.maxHp += num * 1;
+}
+//è®¡ç®—åŸºç¡€å±æ€§
+function calcBasicAttri(player){
+	//è¡€é‡
+	player.fightAttri.maxHp += player.basicAttri.maxHp ;
+	//æ”»å‡»åŠ›
+	player.fightAttri.attack += player.basicAttri.attack ;
+	//é˜²å¾¡
+	player.fightAttri.defend += player.basicAttri.defend ;
+	//æš´å‡»ä¼¤å®³
+	player.fightAttri.critHurt += player.basicAttri.critHurt ;
+	//æš´å‡»
+	player.fightAttri.crit += player.basicAttri.crit ;
+	//éŸ§æ€§
+	player.fightAttri.toughness += player.basicAttri.toughness ;
+	//å‘½ä¸­
+	player.fightAttri.hit += player.basicAttri.hit;
+	//é—ªé¿
+	player.fightAttri.avoid += player.basicAttri.avoid;
+	//æ§åˆ¶
+	player.fightAttri.control += player.basicAttri.control;
+	//æŠ—æ€§
+	player.fightAttri.resistance += player.basicAttri.resistance;
+}
+//è®¡ç®—å±æ€§æ¦‚ç‡
+function calcAllRate(player) {
+	player.attriRate.critRate = calcRate(player.fightAttri.crit);
+	player.attriRate.toughnessRate = calcRate(player.fightAttri.toughness);
+	player.attriRate.hitRate = calcRate(player.fightAttri.hit);
+	player.attriRate.avoidRate = calcRate(player.fightAttri.avoid);
+};
+//è®¡ç®—äººç‰©å±æ€§
+exports.calcPlayer = function (player){
+	//äººç‰©åŸºç¡€å±æ€§
+	calcBasicAttri(player);
+	str(player, player.basicAttri.str);
+	con(player, player.basicAttri.con);
+	wil(player, player.basicAttri.wil);
+	dex(player, player.basicAttri.dex);
+	spi(player, player.basicAttri.spi);
+	//æŠ€èƒ½
+	//è£…å¤‡
+	//å±æ€§æ¦‚ç‡
+	calcAllRate(player);
 }
