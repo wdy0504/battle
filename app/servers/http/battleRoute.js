@@ -3,11 +3,48 @@
 
 var skillAttack = require("./skillAttack");
 var playerAttri = require("./playerAttri");
+
+var  gfightStruct1 = [];
+var  gfightStruct2 = [];
 module.exports = function (app) {
 	app.post('/battle/battle', function (req, res) {
 		var b = battle();
 		res.send(b);
 	});
+	
+	app.post('/battle/addPlay1', function (req, res) {
+		var data = req.body.player
+		JSON.parse(data);
+		var player = new playerAttri.Player(data);
+		gfightStruct1.push(player)
+		res.send('sucess');
+	});
+	app.post('/battle/addPlay2', function (req, res) {
+		var data = req.body.player
+		JSON.parse(data);
+		var player = new playerAttri.Player(data);
+		gfightStruct1.push(player)
+		res.send('sucess');
+	});
+	
+	app.post('/battle/getPlay1', function (req, res) {
+		res.send(gfightStruct1);
+	});
+	
+	app.post('/battle/getPlay2', function (req, res) {
+		res.send(gfightStruct2);
+	});
+	
+	app.post('/battle/lvlup',function(req, res){
+		var index = req.body.index;
+		index = parseInt(index);
+		skillAttack.lvlup(gfightStruct1[index]);
+		res.send(gfightStruct1[index]);
+	})
+	
+	app.post('/battle/battle',function(req, res){
+		res.send( skillAttack.startBattle(gfightStruct1, gfightStruct2) );
+	})
 }
 
 function battle() {

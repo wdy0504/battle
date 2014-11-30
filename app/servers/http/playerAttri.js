@@ -31,6 +31,8 @@ exports.Player = function (opts) {
 	this.buffs = opts.buffs || [];
 	//当前经验
 	this.exp = opts.exp || 0;
+	//当前等级
+	this.lvl = opts.lvl || 1;
 };
 //基础属性
 var BasicAttri = function (opts) {
@@ -138,7 +140,7 @@ function calcRate(x) {
 	return rate;
 };
 //升级
-function lvlup(player) {
+exports.lvlup = function (player) {
 	player.basicAttri.maxHp += 3;
 	player.basicAttri.attack += 2;
 	player.basicAttri.hit += 1;
@@ -150,6 +152,7 @@ function lvlup(player) {
 	player.basicAttri.control += 1;
 	player.basicAttri.resistance += 1;
 	player.basicAttri.attriPoint += 5;
+	player.lvl += 1;
 }
 //计算力量属性
 function str(player, num) {

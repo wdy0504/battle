@@ -1,49 +1,98 @@
 ﻿<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>
-      Pomelo
-    </title>
-    <meta http-equiv="content-type" content="text/html;charset=utf-8" />
-    <meta http-equiv="content-style-type" content="text/css" />
-    <meta http-equiv="content-scripte-type" content="text/javascript" />
-    <script src="jquery-1.8.0.min.js"></script>
-    <script src="client.js"></script>
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-  </head>
-  <body>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="generator"
+          content="HTML Tidy for HTML5 (experimental) for Windows https://github.com/w3c/tidy-html5/tree/c63cc39"/>
+    <meta charset="utf-8"/>
+
+    <title>Pomelo</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="content-style-type" content="text/css"/>
+    <meta http-equiv="content-scripte-type" content="text/javascript"/>
+    <script src="jquery-1.8.0.min.js" type="text/javascript">
+    </script>
+    <script src="client.js" type="text/javascript">
+    </script>
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <style type="text/css">
+        /*<![CDATA[*/
+        div.c2 {
+            clear: both
+        }
+
+        div.c1 {
+            float: left
+        }
+
+        /*]]>*/
+    </style>
+</head>
+
+<body>
 <div class="body">
-<div style='float:left'>
-	<div class="con1 battle">
-	   <span id="tip7"></span><br/>
-		<input id="battle" type="button" value="战斗" /><br/>
-	</div>
+    <div class="con1 battle c1">
+        <span id="tip7"></span><br/>
+        <input id="battle" type="button" value="战斗"/><br/>
+    </div>
+
+    <div class="c1">
+        <div>
+            <div class="con2 pl">
+                玩家1：<br/>
+                角色1名字 : <span id="name1"></span><br/>
+                hp： <span id="hp1"></span><br/>
+                角色2名字 : <span id="name2"></span><br/>
+                hp： <span id="hp2"></span><br/>
+            </div>
+
+            <div class="con2">
+                玩家2：<br/>
+                角色1名字 : <span id="name11"></span><br/>
+                hp： <span id="hp11"></span><br/>
+                角色2名字 : <span id="name12"></span><br/>
+                hp： <span id="hp12"></span><br/>
+            </div>
+
+            <div class="con2">
+                <input name="str" type="text"/>
+                <input name="con" type="text"/>
+                <input name="dex" type="text"/>
+                <input name="wil" type="text"/>
+                <input name="spi" type="text"/>
+                <input name="maxHp" type="text"/>
+                <input name="attack" type="text"/>
+                <input name="defend" type="text"/>
+                <input name="critHurt" type="text"/>
+                <input name="crit" type="text"/>
+                <input name="toughness" type="text"/>
+                <input name="hit" type="text"/>
+                <input name="avoid" type="text"/>
+                <input name="control" type="text"/>
+                <input name="resistance" type="text"/>
+                <input name="reduceDefend" type="text"/>
+                <input name="reduceDefendPer" type="text"/>
+                <input name="vampirePer" type="text"/>
+                <input name="recoverHp" type="text"/>
+                <input name="reduceDamagePer" type="text"/>
+                <input name="reduceDamagePer" type="text"/>
+                <input name="reduceDamagePer" type="text"/>
+                <button id="addplayer1" type="button">添加队伍1玩家</button>
+                <button id="addplayer2" type="button">添加队伍2玩家</button>
+            </div>
+        </div>
+
+        <div class="c2">
+            <button id="next" type="button">下一步</button>
+            <button id="prev" type="button">上一步</button>
+
+            <p id="round"></p>
+
+            <div class="data"></div>
+        </div>
+
+        <div class="attri c2"></div>
+    </div>
 </div>
-<div style='float:left'>
-	<div>
-		<div class="con2 pl">
-		  玩家1：<br/>
-		  角色1名字:<span id="name1"></span><br/>
-		  hp：<span id="hp1"></span><br/>
-
-		  角色2名字:<span id="name2"></span><br/>
-		  hp：<span id="hp2"></span><br/>
-
-		</div>
-		<div class="con2">
-		  玩家2：<br/>
-		  角色1名字:<span id="name11"></span><br/>
-		  hp：<span id="hp11"></span><br/>
-
-		  角色2名字:<span id="name12"></span><br/>
-		  hp：<span id="hp12"></span><br/>
-
-		</div>
-	</div>
-	<div class='attri' style='clear:both'>
-		
-	</div>
-</div>
-  </body>
+</body>
 </html>

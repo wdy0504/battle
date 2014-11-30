@@ -433,8 +433,8 @@ function battle1(attacker, defendQueue, defenderRecords, attackType, opt, func) 
 		hp : p.hp,
 		oper : oper,
 		pos : p.pos,
-		name : p.name
-		//player : new Player(p),
+		name : p.name,
+		player : new playerAttri.Player(p)
 	};
 	defenderRecords.push(defender);
 	if (p.hp < 0) {
@@ -461,8 +461,8 @@ function battle2(attacker, defendQueue, defenderRecords, attackType, opt, func, 
 			hp : p.hp,
 			pos : p.pos,
 			oper : oper,
-			name : p.name
-			//player : new Player(p),
+			name : p.name,
+			player : new playerAttri.Player(p)
 		};
 		defenderRecords.push(defender);
 		if (p.hp < 0) {
@@ -488,8 +488,8 @@ function battle3(attacker, defendQueue, defenderRecords, attackType, opt, func, 
 			hp : p.hp,
 			oper : oper,
 			pos : p.pos,
-			name : p.name
-			//player : new Player(p),
+			name : p.name,
+			player : new playerAttri.Player(p)
 		};
 		defenderRecords.push(defender);
 		if (p.hp < 0) {
@@ -584,13 +584,15 @@ exports.startBattle = function (fightStructTmp1, fightStructTmp2) {
 		//回合结束 计算buff
 		var length = gBuffOper.length;
 		var buffs = [];
-		for (var i = 0; i < length; i++) {
+		for (var i = length-1; i >= 0; i--) {
 			gBuffOper[i].tick--;
-			if (gBuffOper[i].tick == 0) {
+			if (gBuffOper[i].tick === 0) {
 				buffOper(gBuffOper[i].id, gBuffOper[i].player, gBuffOper[i].value);
+				gBuffOper.splice(i, 1);
 			} else {
 				var buff = {
 					id : gBuffOper[i].id,
+					tick : gBuffOper[i].tick,
 					pos : gBuffOper[i].player.pos,
 					round : round
 				}
