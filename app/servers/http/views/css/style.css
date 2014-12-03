@@ -10,14 +10,15 @@
 
 .con1{
 	float:left;
-	width: 400px;
-    height: 1000px;
+	width: 300px;
+    height: 400px;
 	border : 2px solid #0f0;
+	overflow:auto;
 }
 
 .con2{
 	float:left;
-	width: 300px;
+	width: 150px;
     height: 400px;
 	border : 2px solid #0f0;
 }
@@ -32,7 +33,24 @@
 .con4{
 	float:left;
 	width: 250px;
-    height: 400px;
+	height: 450px;
 	border : 2px solid #0f0;
 }
 
+.con5{
+	float:left;
+	width: 350px;
+	height: 400px;
+	border : 2px solid #0f0;
+}
+
+.con6{
+	float:left;
+	width: 100px;
+	height: 400px;
+	border : 2px solid #0f0;
+}
+
+input{
+	width:50px
+}

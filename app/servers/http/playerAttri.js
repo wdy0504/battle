@@ -141,19 +141,19 @@ function calcRate(x) {
 };
 //升级
 exports.lvlup = function (player) {
-	player.basicAttri.maxHp += 3;
+	player.basicAttri.maxHp += 4;
 	player.basicAttri.attack += 2;
-	player.basicAttri.hit += 1;
-	player.basicAttri.avoid += 1;
-	player.basicAttri.defend += 1;
-	player.basicAttri.critHurt += 1;
-	player.basicAttri.crit += 1;
-	player.basicAttri.toughness += 1;
-	player.basicAttri.control += 1;
-	player.basicAttri.resistance += 1;
+	player.basicAttri.hit += 2;
+	player.basicAttri.avoid += 2;
+	player.basicAttri.defend += 2;
+	player.basicAttri.critHurt += 2;
+	player.basicAttri.crit += 2;
+	player.basicAttri.toughness += 2;
+	player.basicAttri.control += 2;
+	player.basicAttri.resistance += 2;
 	player.basicAttri.attriPoint += 5;
 	player.lvl += 1;
-}
+};
 //计算力量属性
 function str(player, num) {
 	player.fightAttri.attack += num * 2;
@@ -161,18 +161,17 @@ function str(player, num) {
 }
 //计算体质属性
 function con(player, num) {
-	player.fightAttri.defend += num * 2;
-	player.maxHp += num * 2;
+	player.fightAttri.defend += num * 1;
+	player.maxHp += num * 3;
 }
 //计算意志属性
 function wil(player, num) {
-	player.fightAttri.critHurt += num * 1;
-	player.fightAttri.crit += num * 3;
-	player.fightAttri.resistance += 2;
+	player.fightAttri.crit += num * 1;
+	player.fightAttri.resistance += 1;
 }
 //计算敏捷属性
 function dex(player, num) {
-	player.fightAttri.avoid += num * 1;
+	player.fightAttri.avoid += num * 2;
 	player.fightAttri.crit += num * 1;
 }
 //计算精神属性
@@ -215,6 +214,7 @@ function calcAllRate(player) {
 };
 //计算人物属性
 exports.calcPlayer = function (player){
+	player.fightAttri = new FightAttri({});
 	//人物基础属性
 	calcBasicAttri(player);
 	str(player, player.basicAttri.str);

@@ -3,7 +3,7 @@ NORMALATTACK = 1;
 PHYSICALATTACK = 2;
 SKILLATTACK = 3;
 
-function skillAttack(attacker, playerQueue, defendQueue, buffOper, defenderRecords) {
+function playerSkillAttack(attacker, playerQueue, defendQueue, buffOper, defenderRecords) {
 	var opt = {
 		damagePer : 0,
 		avoidRate : 0,
@@ -138,7 +138,8 @@ function skillAttack(attacker, playerQueue, defendQueue, buffOper, defenderRecor
 		//凝风斩：对单个敌人施展攻击(技能)
 		battle1(attacker, defendQueue, defenderRecords, PHYSICALATTACK, opt);
 		break;
-	case 208000: //箭芒：攻击2-3人,伤害递减(技能)
+	case 208000:
+		//箭芒：攻击2-3人,伤害递减(技能)
 		battle2(attacker, defendQueue, defenderRecords, SKILLATTACK, opt, function (p, popt) {
 			popt.reduceDamagePer = -10;
 		}, 2);
@@ -282,8 +283,8 @@ function petSkillAttack(attacker, playerQueue, defendQueue, buffOper, defenderRe
 		attack : 0,
 		reduceDefendPer : 0,
 		reduceDamagePer : 0
-	}
-	var skillId = attacker.skills[attacker.skillPos];
+	};
+	var skillId = attacker.skills[0];
 	console.log(attacker.name + '使用了技能' + skillId);
 	switch (skillId) {
 	case 0:
@@ -308,7 +309,7 @@ function petSkillAttack(attacker, playerQueue, defendQueue, buffOper, defenderRe
 		battle2(attacker, defendQueue, defenderRecords, SKILLATTACK, opt, function (p, popt) {
 			popt.reduceDamagePer = -10;
 		}, 3);
-	case 116000:
+	case 115000:
 		//奕剑四方：攻击2个敌人。(物理)
 		battle2(attacker, defendQueue, defenderRecords, PHYSICALATTACK, opt, function (p, popt) {
 			popt.reduceDamagePer = -10;
@@ -319,6 +320,7 @@ function petSkillAttack(attacker, playerQueue, defendQueue, buffOper, defenderRe
 			popt.reduceDamagePer = -10;
 		}, 3);
 	}
+	return skillId;
 }
 function buffOper(id, player, value) {
 	switch (id) {
@@ -398,8 +400,6 @@ function calcSkilldamage(attacker, defender, attackType, oper, opt) {
 	}
 	//计算伤害
 	damage = attacker.fightAttri.attack + opt.attack - defender.fightAttri.defend + defender.fightAttri.defend * opt.reduceDefendPer / 100;
-	console.log(attacker.fightAttri.attack + '_' + opt.attack + '_' + defender.fightAttri.defend + '_' + defender.fightAttri.defend + '_' + opt.reduceDefendPer + '_' + defender.fightAttri.defend * opt.reduceDefendPer / 100);
-	console.log(damage);
 	if (damage < 0) {
 		oper.damage = 0;
 		console.log(defender.name + '受到' + attacker.name + '的' + oper.damage + '伤害——————(' + attacker.name + '的hp:' + attacker.hp + ';' + defender.name + '的hp:' + defender.hp + ')');
@@ -428,6 +428,7 @@ function battle1(attacker, defendQueue, defenderRecords, attackType, opt, func) 
 	if (func) {
 		func(p, opt);
 	}
+
 	calcSkilldamage(attacker, p, attackType, oper, opt);
 	defender = {
 		hp : p.hp,
@@ -507,7 +508,12 @@ function battling(attackQueue, playerQueue, defendQueue, round, buffOper, fightR
 		var attacker = attackQueue.splice(index, 1)[0];
 
 		if (attacker.hp > 0) {
-			skillId = skillAttack(attacker, playerQueue, defendQueue, buffOper, defenderRecords);
+			if(attacker.type === 1){
+				skillId = playerSkillAttack(attacker, playerQueue, defendQueue, buffOper, defenderRecords);
+			} else {
+				skillId = petSkillAttack(attacker, playerQueue, defendQueue, buffOper, defenderRecords);
+			}
+
 		} else if (attacker.battleStatus !== 1) {
 			break;
 		} else {
@@ -539,13 +545,13 @@ exports.startBattle = function (fightStructTmp1, fightStructTmp2) {
 		queue2 : [],
 		fightActions : [],
 		buffs : []
-	}
+	};
 	for (var i in fightStructTmp1) {
 		var j = {
 			name : fightStructTmp1[i].name,
 			maxHp : fightStructTmp1[i].maxHp,
 			hp : fightStructTmp1[i].hp
-		}
+		};
 		var player = new playerAttri.Player(fightStructTmp1[i]);
 		fightRecord.queue1.push(player);
 	}
