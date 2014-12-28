@@ -1,3 +1,4 @@
+
 module.exports = {
   USER: {
     COMMENT_AMOUNT: 'commentAmount', //每天评论次数

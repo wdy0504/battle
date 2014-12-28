@@ -11,10 +11,12 @@ var User = Model.User;
  * @param {String} password 密码
  * @panam {Function} callback 回调函数
  */
-exports.newAndSave = function(username, password, callback){
+exports.newAndSave = function(_id, username, password, callback){
 	var user = new User();
-	user.username = username
+            user._id = _id;
+	user.username = username;
 	user.password = password;
+	user.loginTime = new Date().getTime();
 	user.save(callback);
 };
 
@@ -28,7 +30,7 @@ exports.newAndSave = function(username, password, callback){
  */
 exports.getUserByUsername = function(username, callback){
 	User.findOne({username: username}, callback);
-}
+};
 
 /**
  * 根据查询条件, 查找一个用户
@@ -40,7 +42,7 @@ exports.getUserByUsername = function(username, callback){
  */
 exports.getUserByQuery = function(query, callback){
 	User.findOne(query, callback);
-}
+};
 
 /**
  * 根据查询条件, 查找用户
@@ -52,4 +54,4 @@ exports.getUserByQuery = function(query, callback){
  */
 exports.getUsersByQuery = function(query, callback){
 	User.find(query, callback);
-}
+};

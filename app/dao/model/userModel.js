@@ -2,8 +2,10 @@
 var Schema = mongoose.Schema;
 
 var UserSchema = new Schema({
-	username: {type: String},
-	loginServer: {type: Number, default: 1}
+     _id: {type: String},
+    username: {type: String},
+    password: {type: String},
+    loginTime: {type: Number}
 });
 
 mongoose.model('User', UserSchema);

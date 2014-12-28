@@ -1,3 +1,2 @@
 ﻿exports.UserDao = require('./userDao');
-exports.TopicDao = require('./topicDao');
-exports.ReplyDao = require('./replyDao');
+exports.PlayerDao = require('./playerDao');

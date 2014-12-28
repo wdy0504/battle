@@ -6,16 +6,17 @@ var playerAttri = require("./playerAttri");
 
 var gfightStruct1 = [];
 var gfightStruct2 = [];
-module.exports = function (app) {
-    app.post('/battle/battle1', function (req, res) {
+
+module.exports = function(app) {
+    app.post('/battle/battle1', function(req, res) {
         var b = battle();
         res.send(b);
     });
 
-    app.post('/battle/battle2', function (req, res) {
+    app.post('/battle/battle2', function(req, res) {
         res.send(skillAttack.startBattle(gfightStruct1, gfightStruct2));
     });
-    app.post('/battle/addPlay1', function (req, res) {
+    app.post('/battle/addPlay1', function(req, res) {
         if (gfightStruct1.length >= 5) {
             res.send('fail');
         }
@@ -31,14 +32,12 @@ module.exports = function (app) {
         console.log(player);
         gfightStruct1.push(player);
         gfightStruct1.push(pet);
-
         res.send('sucess');
     });
-    app.post('/battle/addPlay2', function (req, res) {
+    app.post('/battle/addPlay2', function(req, res) {
         if (gfightStruct2.length >= 5) {
             res.send('fail');
         }
-
         var playerdata = req.body.player;
         playerdata = JSON.parse(playerdata);
         var petdata = req.body.pet;
@@ -53,16 +52,16 @@ module.exports = function (app) {
         res.send('sucess');
     });
 
-    app.post('/battle/getPlay1', function (req, res) {
+    app.post('/battle/getPlay1', function(req, res) {
 
         res.send(gfightStruct1);
     });
 
-    app.post('/battle/getPlay2', function (req, res) {
+    app.post('/battle/getPlay2', function(req, res) {
         res.send(gfightStruct2);
     });
 
-    app.post('/battle/delPlay1', function (req, res) {
+    app.post('/battle/delPlay1', function(req, res) {
         var index = req.body.index;
         index = parseInt(index);
         gfightStruct1.splice(index * 2 + 1, 1);
@@ -70,7 +69,7 @@ module.exports = function (app) {
         res.send('sucess');
     });
 
-    app.post('/battle/delPlay2', function (req, res) {
+    app.post('/battle/delPlay2', function(req, res) {
         var index = req.body.index;
         index = parseInt(index);
         gfightStruct2.splice(index * 2 + 1, 1);
@@ -78,17 +77,26 @@ module.exports = function (app) {
         res.send('sucess');
     });
 
-    app.post('/battle/lvlup', function (req, res) {
+    app.post('/battle/lvlup1 ', function(req, res) {
         var index = req.body.index;
         index = parseInt(index);
-        skillAttack.lvlup(gfightStruct1[index]);
-        res.send(gfightStruct1[index]);
-    })
+        skillAttack.lvlup(gfightStruct2[index]);
+        playerAttri.calcPlayer(gfightStruct2[index]);
+        res.send('sucess');
+    });
 
-}
+    app.post('/battle/lvlup2 ', function(req, res) {
+        var index = req.body.index;
+        index = parseInt(index);
+        skillAttack.lvlup(gfightStruct2[index]);
+        playerAttri.calcPlayer(gfightStruct2[index]);
+        res.send('sucess');
+    });
+};
 
 function battle() {
     var basicAttri = {
+        maxHp: 100,
         attack: 80,
         defend: 50,
         critHurt: 50,
@@ -103,13 +111,12 @@ function battle() {
         basicAttri: basicAttri,
         fightAttri: {},
         attriRate: {},
-        hp: 200,
-        maxHp: 200,
         skills: [112000]
     });
     playerAttri.calcPlayer(pet1);
 
     var basicAttri = {
+        maxHp: 100,
         attack: 60,
         defend: 50,
         critHurt: 50,
@@ -132,6 +139,7 @@ function battle() {
     playerAttri.calcPlayer(player1);
 
     var basicAttri = {
+        maxHp: 100,
         attack: 60,
         defend: 50,
         critHurt: 50,
@@ -146,13 +154,12 @@ function battle() {
         basicAttri: basicAttri,
         fightAttri: {},
         attriRate: {},
-        hp: 200,
-        maxHp: 200,
         skills: [111000]
     });
     playerAttri.calcPlayer(pet2);
 
     var basicAttri = {
+        maxHp: 100,
         attack: 70,
         defend: 50,
         critHurt: 50,
@@ -167,8 +174,6 @@ function battle() {
         basicAttri: basicAttri,
         fightAttri: {},
         attriRate: {},
-        hp: 200,
-        maxHp: 200,
         pet: pet2,
         skills: [101000, 102000, 103000, 104000]
     });

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<HTML>
+<HEAD>
+    <META CHARSET="utf-8"/>
+    <TITLE>Pomelo</TITLE>
+    <META CONTENT="text/html;charset=utf-8" HTTP-EQUIV="content-type"/>
+    <SCRIPT SRC="./jquery-1.8.0.min.js"></SCRIPT>
+    <style type="text/css">
+        * {
+            margin: 0 auto;
+        }
+        div {
+            float: left;
+            width: 200px;
+            height: 150px;
+            border: 2px solid #0f0;
+
+        }
+        form {
+            float: left;
+            width: 250px;
+            height: 200px;
+            border: 2px solid #0f0;
+
+        }
+        input {
+            display: block;
+            margin-left: 0px;
+        }
+        select {
+            display: block;
+            margin-left: 0px;
+        }
+        p {
+            color: blue;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            $("input").each(function () {
+                if ($(this).attr('name')) {
+                    $(this).before($(this).attr('name'));
+                }
+            });
+            $("select").each(function () {
+                if ($(this).attr('name')) {
+                    $(this).before($(this).attr('name'));
+                }
+            });
+            $(".button").click(function () {
+                var route = $(this).prevAll('p').text();
+                var url = route;
+                var args = {};
+                $(this).parent('div').find("input").each(function () {
+                    if ($(this).attr('name')) {
+                        args[$(this).attr('name')] = $(this).val();
+                    }
+                });
+                $(this).parent('div').find("select").each(function () {
+                    if ($(this).attr('name')) {
+                        args[$(this).attr('name')] = $(this).val();
+                    }
+                });
+                console.log(args);
+                $.post(url, args, function (data, status) {
+                    console.log(data);
+                }, "json");
+            });
+        });
+    </script>
+</HEAD>
+<BODY>
+    <div>
+        <p>user/login</p>
+        <INPUT name="username" TYPE="text">
+        <INPUT name="password" TYPE="text">
+        <INPUT class='button' TYPE="button" VALUE="登录"/>
+    </div>
+    <div>
+        <p>user/logout</p>
+        <INPUT class='button' TYPE="button" VALUE="退出"/>
+    </div>
+
+    <!--注册-->
+    <div>
+        <p>user/register</p>
+        <INPUT name="username" TYPE="text">
+        <INPUT name="password" TYPE="text">
+        <INPUT class='button' TYPE="button" VALUE="注册"/>
+    </div>
+
+    <!--新建角色-->
+    <div>
+        <p>user/addPlayer</p>
+        <INPUT name="name" TYPE="text">
+        <INPUT class='button' TYPE="button" VALUE="新建角色"/>
+    </div>
+    <!--选择角色-->
+    <div>
+        <p>user/selectPlayer</p>
+        <INPUT name="playerId" TYPE="text">
+        <INPUT class='button' TYPE="button" VALUE="选择角色"/>
+    </div>
+    <!--获取角色-->
+    <div>
+        <p>user/getPlayers</p>
+        <INPUT class='button' TYPE="button" VALUE="获取角色"/>
+    </div>
+    <!--删除角色-->
+    <div>
+        <p>user/delPlayer</p>
+        <INPUT name="playerId" TYPE="text">
+        <INPUT class='button' TYPE="button" VALUE="删除角色"/>
+    </div>
+    <!--角色升级-->
+    <div>
+        <p>player/lvlPlayer</p>
+        <INPUT class='button' TYPE="button" VALUE="角色升级"/>
+    </div>
+    <!--角色升级-->
+    <div>
+        <p>player/lvlPlayer</p>
+        <INPUT class='button' TYPE="button" VALUE="角色升级"/>
+    </div>
+    <!--角色升级通过exp-->
+    <div>
+        <p>player/lvlPlayerByexp</p>
+        <INPUT class='button' TYPE="button" VALUE="角色升级通过exp"/>
+    </div>
+    <!--选择地图-->
+    <div>
+        <p>player/selectMap</p>
+        <INPUT name="mapId" TYPE="text">
+        <INPUT class='button' TYPE="button" VALUE="选择地图"/>
+    </div>
+    <!--战斗-->
+    <div>
+        <p>player/battleOnMap</p>
+        <INPUT class='button' TYPE="button" VALUE="战斗"/>
+    </div>
+    <!--更新-->
+    <div>
+        <p>player/updatePlayer</p>
+        <INPUT class='button' TYPE="button" VALUE="更新"/>
+    </div>
+     <!--获取角色-->
+    <div>
+        <p>player/getPlayer</p>
+        <INPUT class='button' TYPE="button" VALUE="获取角色"/>
+    </div>
+</BODY>
+</HTML>

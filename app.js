@@ -1,13 +1,57 @@
 var path = require('path');
 var server = require('./app/http');
+var fs = require('fs');
+var playerAttri = require("./app/servers/http/playerAttri");
 //var serversPath = path.join(__dirname + '/config/servers.json');
 //var servers = require(serversPath);
 var serverconf = {
-    name : "http", port : 8001, host : "127.0.0.1", protocol : "http"
+    name: "http",
+    port: 8001,
+    host: "127.0.0.1",
+    protocol: "http"
 }
 var app = {
-    getBase : __dirname + '/'
+    getBase: __dirname + '/'
 };
+global.lvlexp = require('./app/util/lvlexp').lvlup;
+
+global.monsterMap = {};
+fs.readdirSync("./app/config/monster").forEach(function(file) {
+    //初始化怪物
+    if (/^\d+.js$/.test(file)) {
+        var routePath = path.join('./app/config/monster', file);
+        var i = file.indexOf('.js');
+        var str = file.substring(0, i);
+        global.monsterMap[str] = require('./app/config/monster/' + file);
+        var queue = [];
+        for (var i in global.monsterMap[str]) {
+            if (global.monsterMap[str].hasOwnProperty(i)) { //filter,只输出man的私有属性
+                global.monsterMap[str][i] = new playerAttri.Monster(global.monsterMap[str][i]);
+                playerAttri.calcPlayer(global.monsterMap[str][i]);
+                queue.push(i)
+            };
+        }
+        global.monsterMap[str].queue = queue;
+    }
+});
+//console.log(global.monsterMap);
+
+global.equipments = {};
+fs.readdirSync("./app/config/equipment").forEach(function(file) {
+    //初始化装备
+    if (/^\d+.js$/.test(file)) {
+        var routePath = path.join('./app/config/equipment', file);
+        var i = file.indexOf('.js');
+        var str = file.substring(0, i);
+        global.equipments[str] = require('./app/config/equipment/' + file);
+        for (var i in global.equipments[str]) {
+            if (global.equipments[str].hasOwnProperty(i)) { //filter,只输出man的私有属性
+                global.equipments[str][i] = new playerAttri.equipment(global.equipments[str][i]);
+            };
+        }
+    }
+});
+//console.log(global.equipments);
 server(app, serverconf);
 
 /*	case 201000:
